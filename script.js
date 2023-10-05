@@ -1,64 +1,78 @@
-const playButton = document.querySelector(selectors,'play')
-const pauseButton = document.querySelector(selectors,'.pause')
-const resetButton = document.querySelector(selectors ,'.reset')
+let startBtn = document.getElementById('start');
+let stopBtn = document.getElementById('stop');
+let resetBtn = document.getElementById('reset');
 
-playButton.addEventListener(type,'click',start)
-pauseButton.addEventListener(type,'click',pause)
-resetButton.addEventListener(type,'click',reset)
-//Declaring variables to use in our function//
-let startTime 
-let elapsedTime = 0
-let timeInterval
+let hour = 0o0;
+let minute = 0o0;
+let second = 0o0;
+let count = 0o0;
 
-//Convert Time to a format of Hours,Minutes,Seconds//
+startBtn.addEventListener('click', function () {
+	timer = true;
+	stopWatch();
+});
 
-function timeToString(time){
-    let diffInHrs= time/3600000
-    let hh = Math.floor(diffInHrs)
+stopBtn.addEventListener('click', function () {
+	timer = false;
+});
 
-    let diffInMin = (diffInHrs-hh)*60
-    let mm =Math.floor(diffInMin)
+resetBtn.addEventListener('click', function () {
+	timer = false;
+	hour = 0;
+	minute = 0;
+	second = 0;
+	count = 0;
+	document.getElementById('hr').innerHTML = "00";
+	document.getElementById('min').innerHTML = "00";
+	document.getElementById('sec').innerHTML = "00";
+	document.getElementById('count').innerHTML = "00";
+});
 
-    let diffInSec = (diffInMin-mm)*60
-    let ss = Math.floor(diffInSec)
+function stopWatch() {
+	if (timer) {
+		count++;
 
-    let diffInMs= (diffInSec-ss)*100
-    let ms = Math.floor(diffInMs)
+		if (count == 100) {
+			second++;
+			count = 0;
+		}
 
-    let foramttedMM = mm.toString().padStart(2, '0')
-    let foramttedSS = ss.toString().padStart(2, '0')
-    let foramttedMs = ms.toString().padStart(2, '0')
-    return '${formattedMM}:${formattedSS}:${formattedMS}'
-}
+		if (second == 60) {
+			minute++;
+			second = 0;
+		}
 
-function showButton(buttonKey){
-    const buttonToShow = buttonKey = 'play'? playButton : pauseButton
-    const buttonToHide = buttonKey = 'play'? pauseButton : playButton
-    buttonToShow.style.display='block'
-    buttonToHide.style.display='none'
-}
+		if (minute == 60) {
+			hour++;
+			minute = 0;
+			second = 0;
+		}
 
-function print(txt){
-    document.getElementById(elementId,'display').innerHTML = txt
-}
-//Creating start, pause and reset functions
-function start(){
-    startTime = Date.now() - elapsedTime
-    timeInterval = setInterval(function printTime(){
-        elapsedTime = Date.now() - startTime
-        print(timeToString(elapsedTime))
-    },timeout,10)
-    showButton(buttonKey,'pause')
-}
+		let hrString = hour;
+		let minString = minute;
+		let secString = second;
+		let countString = count;
 
-function pause(){
-    clearInterval(timerInterval)
-    showButton(buttonKey,'play')
-}
+		if (hour < 10) {
+			hrString = "0" + hrString;
+		}
 
-function reset(){
-    clearInterval(timeInterval)
-    print(txt,'00:00:00')
-    elapsedTime = 0
-    showButton(buttonKey,'play')
+		if (minute < 10) {
+			minString = "0" + minString;
+		}
+
+		if (second < 10) {
+			secString = "0" + secString;
+		}
+
+		if (count < 10) {
+			countString = "0" + countString;
+		}
+
+		document.getElementById('hr').innerHTML = hrString;
+		document.getElementById('min').innerHTML = minString;
+		document.getElementById('sec').innerHTML = secString;
+		document.getElementById('count').innerHTML = countString;
+		setTimeout(stopWatch, 10);
+	}
 }
