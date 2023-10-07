@@ -1,78 +1,94 @@
-let startBtn = document.getElementById('start');
-let stopBtn = document.getElementById('stop');
-let resetBtn = document.getElementById('reset');
+let hours = 0;
+let minutes = 0;
+let seconds = 0;
+let milliseconds = 0;
 
-let hour = 0o0;
-let minute = 0o0;
-let second = 0o0;
-let count = 0o0;
+let displayHours = hours;
+let displayMins = Mins;
+let displaySec = Sec;
+let displayMillisec = Millisec;
 
-startBtn.addEventListener('click', function () {
-	timer = true;
-	stopWatch();
-});
+let status = "stopped";
+let interval = null;
 
-stopBtn.addEventListener('click', function () {
-	timer = false;
-});
 
-resetBtn.addEventListener('click', function () {
-	timer = false;
-	hour = 0;
-	minute = 0;
-	second = 0;
-	count = 0;
-	document.getElementById('hr').innerHTML = "00";
-	document.getElementById('min').innerHTML = "00";
-	document.getElementById('sec').innerHTML = "00";
-	document.getElementById('count').innerHTML = "00";
-});
 
-function stopWatch() {
-	if (timer) {
-		count++;
+function start(){
+    milliseconds++;
 
-		if (count == 100) {
-			second++;
-			count = 0;
-		}
+    if(milliseconds/100 == 1){
+        seconds++;
+        milliseconds = 0;
+        if(seconds/60 ==1){
+          minutes++;
+          seconds = 0;
+        if(minutes/60 ==1){
+            hours++;
+            minutes=0;
+           }   
+        }
+    }
+    if(milliseconds<10){
+        displayMillisec = "0" + milliseconds;
+    } else{
+        displayMillisec = milliseconds;
+    }
 
-		if (second == 60) {
-			minute++;
-			second = 0;
-		}
+    if(seconds < 10) {
+        displaySec="0" + seconds;
+    } else{
+        displaySec= seconds;
+    }
+    if(minutes < 10){
+        displayMins = "0" + minutes;
+    } else{
+        displayMins = minutes;
+    }
+    if(hours < 10){
+        displayHours = "0" + hours;
+    } else{
+        displayHours = hours;
+    }
+    document.getElememntById('timerHrs').innerHTML = displayHours;
+    document.getElememntById('timerMins').innerHTML = displayMins;
+    document.getElememntById('timerSec').innerHTML = displaySec;
+    document.getElememntById('timerMillisec').innerHTML = displayMillisec;
+}
 
-		if (minute == 60) {
-			hour++;
-			minute = 0;
-			second = 0;
-		}
+function startStop(){
+    if(status == "stopped"){
+        window.setInterval(start, 10);
+        status = "started";
+        document.getElementById(`startBtn`).innerHTML = "Stop"
+    }
+    else{
+        window.clearInterval(interval);
+        status="stopped";
+        document.getElementById(`startBtn`).innerHTML="Start";
+    }
+}
 
-		let hrString = hour;
-		let minString = minute;
-		let secString = second;
-		let countString = count;
+function reset(){
+    window.clearInterval(interval);
 
-		if (hour < 10) {
-			hrString = "0" + hrString;
-		}
+    milliseconds = 0;
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    displayMillisec= 0;
+    displayMins= 0;
+    displaySec = 0;
+    displayHours = 0;
+    status = "stopped";
+    document.getElementById('timeHrs').innerHTML = "00";
+    document.getElementById('timeMins').innerHTML = "00";
+    document.getElementById('timeSec').innerHTML = "00";
+    document.getElementById('timeMillisec').innerHTML = "00";
+    document.getElementById('lapRecord').innerHTML = "";
+}
 
-		if (minute < 10) {
-			minString = "0" + minString;
-		}
+function lap(){
+    lapNow = displayHours + ":" + displayMins + ":" + displaySec + ":" + displayMillisec;
+    document.getElementById('lapRecord').innerHTML=document.getElementById('lapRecord').innerHTML +"<p" + lapNow + "</p>";
 
-		if (second < 10) {
-			secString = "0" + secString;
-		}
-
-		if (count < 10) {
-			countString = "0" + countString;
-		}
-
-		document.getElementById('hr').innerHTML = hrString;
-		document.getElementById('min').innerHTML = minString;
-		document.getElementById('sec').innerHTML = secString;
-		document.getElementById('count').innerHTML = countString;
-		setTimeout(stopWatch, 10);
-	}
 }
